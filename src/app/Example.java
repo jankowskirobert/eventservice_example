@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Observable;
 
 import message.Message;
-import message.MessageBroadcaster;
+import message.braodcaster.EuropeMessageBroadcaster;
+import message.factory.MessageFactory;
 import message.receivers.RadioStation;
 import message.receivers.TVStation;
+import message.reporters.NewsFromGermany;
+import message.reporters.NewsFromPoland;
 import message.type.ImportantMessage;
 import message.type.StandardMessage;
 import message.type.UrgentMessage;
@@ -14,14 +17,24 @@ import observer.Subject;
 
 public class Example {
 	public static void main(String[] args) {
-		MessageBroadcaster broadcaster = new MessageBroadcaster();
+		
+		EuropeMessageBroadcaster broadcaster = new EuropeMessageBroadcaster(new MessageFactory());
 		broadcaster.addListener(new TVStation());
 		broadcaster.addListener(new RadioStation());
-		List<Message> news = new ArrayList<Message>();
-		news.add(new ImportantMessage("Vulcano eruption"));
-		news.add(new StandardMessage("Car accident"));
-		news.add(new UrgentMessage("Bug in code"));
-		broadcaster.sendMessages(news);
+		NewsFromGermany germanReporter = new NewsFromGermany(broadcaster);
+		NewsFromPoland polishReporter = new NewsFromPoland(broadcaster);
+		List<String> news = new ArrayList<String>();
+		news.add("Vulcano eruption!");
+		news.add("Vulcano eruption!!");
+		news.add("Vulcano eruption?");
+		polishReporter.publishMessage(news);
+		germanReporter.publishMessage("Guten tag");
+		polishReporter.publishMessage("Dzieñ Dobry");
+		germanReporter.publishMessage("Guten tag!");
+		polishReporter.publishMessage("Dzieñ Dobry!");
+		germanReporter.publishMessage("Guten tag!!");
+		polishReporter.publishMessage("Dzieñ Dobry!!");
 		
+	
 	}
 }
